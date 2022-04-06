@@ -20,13 +20,11 @@ export default {
         this.contacts = response.data
       });
     },
-    showContact: function (thisContact) {
+    showContact: function (currentContact) {
+      console.log(currentContact);
+      this.contactInfo = currentContact;
       console.log('showing product');
-      axios.get(`/contacts/1`).then(response => {
-        console.log(response.data);
-        this.contactInfo = thisContact;
-
-      });
+      document.querySelector("#contact-details").showModal();
     }
   },
 };
@@ -40,6 +38,16 @@ export default {
       <button
         v-on:click="showContact(contact)"
       >Show contact info</button>
+      <dialog id="contact-details">
+        <form method="dialog">
+          <h1>Contact info</h1>
+          <p>First Name: {{ contactInfo.first_name }}</p>
+          <p>Last Name:: {{ contactInfo.last_name }}</p>
+          <p>Email: {{ contactInfo.email }}</p>
+          <p>Phone number: {{ contactInfo.phone_number }}</p>
+          <button>Close</button>
+        </form>
+      </dialog>
     </div>
   </div>
 </template>
