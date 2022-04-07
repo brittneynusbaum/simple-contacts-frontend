@@ -49,6 +49,15 @@ export default {
       axios.patch(`/contacts/${this.editContactParams.id}`, this.editContactParams).then(response => {
         console.log(response.data);
       });
+    },
+    destroyContact: function (contact) {
+      console.log(contact.id);
+      console.log('destroy contact');
+      axios.delete(`/contacts/${this.contact.id}`).then(response => {
+        var index = this.contacts.indexOf(contact);
+        this.contacts.splice(index, 1);
+        console.log(response.data);
+      });
     }
   },
 };
@@ -117,6 +126,7 @@ export default {
             <input type="text" v-model="editContactParams.image" />
           </p>
           <button v-on:click="updateContact()">Update Contact</button>
+          <button v-on:click="destroyContact(currentContact)">Delete Contact</button>
           <button>Close</button>
         </form>
       </dialog>
