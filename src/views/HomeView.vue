@@ -6,7 +6,8 @@ export default {
     return {
       message: "Welcome to Vue.js!!",
       contacts: [],
-      contactInfo: {}
+      contactInfo: {},
+      newContactParams: {}
     };
   },
   created: function () {
@@ -20,6 +21,22 @@ export default {
         this.contacts = response.data
       });
     },
+    createContact: function () {
+      console.log('creating product');
+      var newContactParams = {
+        first_name: this.newContactParams.first_name,
+        last_name: this.newContactParams.last_name,
+        email: this.newContactParams.email,
+        phone_number: this.newContactParams.phone_number,
+        image: this.newContactParams.image
+      }
+      axios.post(`/contacts`, newContactParams).then(response => {
+        console.log(response.data);
+        this.contacts.push(response.data)
+        this.newContactParams = {}
+      })
+    },
+
     showContact: function (currentContact) {
       console.log(currentContact);
       this.contactInfo = currentContact;
@@ -33,6 +50,30 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
+    <h5>Add new contact</h5>
+    <p>
+      First name:
+      <input type="text" v-model="newContactParams.first_name" />
+    </p>
+    <p>
+      Last name:
+      <input type="text" v-model="newContactParams.last_name" />
+    </p>
+    <p>
+      Email:
+      <input type="text" v-model="newContactParams.email" />
+    </p>
+    <p>
+      Phone number:
+      <input type="text" v-model="newContactParams.phone_number" />
+    </p>
+    <p>
+      Image:
+      <input type="text" v-model="newContactParams.image" />
+    </p>
+
+    <button v-on:click="createContact()">Create contact</button>
+    <h5>Contacts</h5>
     <div v-for="contact in contacts" v-bind:key="contact.id">
       {{ contact.first_name }} {{ contact.last_name }}
       <button
@@ -42,9 +83,10 @@ export default {
         <form method="dialog">
           <h1>Contact info</h1>
           <p>First Name: {{ contactInfo.first_name }}</p>
-          <p>Last Name:: {{ contactInfo.last_name }}</p>
+          <p>Last Name: {{ contactInfo.last_name }}</p>
           <p>Email: {{ contactInfo.email }}</p>
           <p>Phone number: {{ contactInfo.phone_number }}</p>
+          <p>Image: {{ contactInfo.image }}</p>
           <button>Close</button>
         </form>
       </dialog>
