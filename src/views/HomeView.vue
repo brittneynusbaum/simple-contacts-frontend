@@ -7,7 +7,8 @@ export default {
       message: "Welcome to Vue.js!!",
       contacts: [],
       contactInfo: {},
-      newContactParams: {}
+      newContactParams: {},
+      editContactParams: {}
     };
   },
   created: function () {
@@ -36,12 +37,18 @@ export default {
         this.newContactParams = {}
       })
     },
-
     showContact: function (currentContact) {
       console.log(currentContact);
       this.contactInfo = currentContact;
+      this.editContactParams = currentContact;
       console.log('showing product');
       document.querySelector("#contact-details").showModal();
+    },
+    updateContact: function () {
+      console.log('updating contact');
+      axios.patch(`/contacts/${this.editContactParams.id}`, this.editContactParams).then(response => {
+        console.log(response.data);
+      });
     }
   },
 };
@@ -81,12 +88,35 @@ export default {
       >Show contact info</button>
       <dialog id="contact-details">
         <form method="dialog">
-          <h1>Contact info</h1>
+          <h5>Contact info</h5>
           <p>First Name: {{ contactInfo.first_name }}</p>
           <p>Last Name: {{ contactInfo.last_name }}</p>
           <p>Email: {{ contactInfo.email }}</p>
           <p>Phone number: {{ contactInfo.phone_number }}</p>
           <p>Image: {{ contactInfo.image }}</p>
+
+          <h5>Update contact</h5>
+          <p>
+            First name:
+            <input type="text" v-model="editContactParams.first_name" />
+          </p>
+          <p>
+            Last name:
+            <input type="text" v-model="editContactParams.last_name" />
+          </p>
+          <p>
+            Email:
+            <input type="text" v-model="editContactParams.email" />
+          </p>
+          <p>
+            Phone number:
+            <input type="text" v-model="editContactParams.phone_number" />
+          </p>
+          <p>
+            Image:
+            <input type="text" v-model="editContactParams.image" />
+          </p>
+          <button v-on:click="updateContact()">Update Contact</button>
           <button>Close</button>
         </form>
       </dialog>
