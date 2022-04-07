@@ -8,7 +8,8 @@ export default {
       contacts: [],
       contactInfo: {},
       newContactParams: {},
-      editContactParams: {}
+      editContactParams: {},
+      errors: []
     };
   },
   created: function () {
@@ -35,6 +36,10 @@ export default {
         console.log(response.data);
         this.contacts.push(response.data)
         this.newContactParams = {}
+        this.errors = []
+      }).catch(error => {
+        console.log('error loading')
+        this.errors = error.response.data.errors
       })
     },
     showContact: function (currentContact) {
@@ -66,6 +71,7 @@ export default {
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
+    <p v-for="error in errors" v-bind:key="error">Errors: {{ errors }}</p>
     <h5>Add new contact</h5>
     <p>
       First name:
@@ -92,46 +98,49 @@ export default {
     <h5>Contacts</h5>
     <div v-for="contact in contacts" v-bind:key="contact.id">
       {{ contact.first_name }} {{ contact.last_name }}
-      <button
-        v-on:click="showContact(contact)"
-      >Show contact info</button>
-      <dialog id="contact-details">
-        <form method="dialog">
-          <h5>Contact info</h5>
-          <p>First Name: {{ contactInfo.first_name }}</p>
-          <p>Last Name: {{ contactInfo.last_name }}</p>
-          <p>Email: {{ contactInfo.email }}</p>
-          <p>Phone number: {{ contactInfo.phone_number }}</p>
-          <p>Image: {{ contactInfo.image }}</p>
-
-          <h5>Update contact</h5>
-          <p>
-            First name:
-            <input type="text" v-model="editContactParams.first_name" />
-          </p>
-          <p>
-            Last name:
-            <input type="text" v-model="editContactParams.last_name" />
-          </p>
-          <p>
-            Email:
-            <input type="text" v-model="editContactParams.email" />
-          </p>
-          <p>
-            Phone number:
-            <input type="text" v-model="editContactParams.phone_number" />
-          </p>
-          <p>
-            Image:
-            <input type="text" v-model="editContactParams.image" />
-          </p>
-          <button v-on:click="updateContact()">Update Contact</button>
-          <button v-on:click="destroyContact(currentContact)">Delete Contact</button>
-          <button>Close</button>
-        </form>
-      </dialog>
+      <img v-bind:src="contact.image" />
+      <button v-on:click="showContact(contact)">Show contact info</button>
     </div>
+    <dialog id="contact-details">
+      <form method="dialog">
+        <h5>Contact info</h5>
+        <p>First Name: {{ contactInfo.first_name }}</p>
+        <p>Last Name: {{ contactInfo.last_name }}</p>
+        <p>Email: {{ contactInfo.email }}</p>
+        <p>Phone number: {{ contactInfo.phone_number }}</p>
+        <p>Image: {{ contactInfo.image }}</p>
+
+        <h5>Update contact</h5>
+        <p>
+          First name:
+          <input type="text" v-model="editContactParams.first_name" />
+        </p>
+        <p>
+          Last name:
+          <input type="text" v-model="editContactParams.last_name" />
+        </p>
+        <p>
+          Email:
+          <input type="text" v-model="editContactParams.email" />
+        </p>
+        <p>
+          Phone number:
+          <input type="text" v-model="editContactParams.phone_number" />
+        </p>
+        <p>
+          Image:
+          <input type="text" v-model="editContactParams.image" />
+        </p>
+        <button v-on:click="updateContact()">Update Contact</button>
+        <button v-on:click="destroyContact(currentContact)">Delete Contact</button>
+        <button>Close</button>
+      </form>
+    </dialog>
   </div>
 </template>
 
-<style></style>
+<style>
+img {
+  width: 150px;
+}
+</style>
